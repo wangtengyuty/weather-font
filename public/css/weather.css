@@ -1,0 +1,14 @@
+.header{
+    padding-left: 20px;
+}
+
+.header h1{
+    color: deepskyblue;
+}
+
+.weatherSelect{
+    padding-left: 20px;
+}
+.card{
+    width: 300px;
+}
