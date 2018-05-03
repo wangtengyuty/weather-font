@@ -1,26 +1,31 @@
 import React from 'react';
 import {Select} from 'antd';
-import WeatherInfo from "./weatherInfo";
+import WeatherForecast from "./weatherForecast";
 
 const Option = Select.Option;
 export default class Deatil extends React.Component{
-    constructor(){
-        super();
+
+    constructor(props){
+        super(props);
         this.state={
             citys:"",
             cityKey:"",
-            test:""
+            isFirstRender:"",
+            createRender:""
         }
-
         this.handleChange=this.handleChange.bind(this);
     }
 
     handleChange(value) {
         this.setState({
             cityKey:value
+        },function () {
+            this.createRender()
         })
-
     }
+
+
+
 
     componentWillMount(){
         var myFetchOptions={
@@ -30,6 +35,31 @@ export default class Deatil extends React.Component{
         fetch("http://localhost:8080/weather/getAllCountry",myFetchOptions).then(response=>response.json()).then(json=>this.setState({
             citys:json
         }))
+    }
+
+
+    shouldComponentUpdate(){
+        if(this.state.isFirstRender===""){
+            this.setState({
+                isFirstRender:"false"
+            })
+            return true;
+        }
+        if(this.state.isFirstRender==="false" &&this.state.cityKey===""){
+            return false;
+        }
+        return true;
+    }
+    createRender(){
+        this.setState({
+            createRender:"true"
+        })
+    }
+
+    method(value){
+        this.setState({
+            createRender:value
+        });
     }
 
 
@@ -48,7 +78,7 @@ export default class Deatil extends React.Component{
                     <Select placeholder={"请选择城市"} style={{ width: 120 }} onChange={this.handleChange}>
                         {cityList}
                     </Select>
-                    <WeatherInfo cityKey={this.state.cityKey}/>
+                    <WeatherForecast cityKey={this.state.cityKey} method={value=>this.method(value)} />
                 </div>
             </div>
         )
